@@ -14,6 +14,6 @@ data class Character(
     val status: String?,
     @SerializedName("location")
     val location: Location?,
-    @SerializedName("species")
-    val species: String?
+    @SerializedName("gender")
+    val gender: String?
 )

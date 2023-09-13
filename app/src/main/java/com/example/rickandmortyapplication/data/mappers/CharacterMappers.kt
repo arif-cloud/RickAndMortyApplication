@@ -9,9 +9,9 @@ fun CharacterDto.toCharacter() : Character {
         id = id,
         name = name,
         image = image,
+        status = status,
         location = location,
-        species = species,
-        status = status
+        gender = gender
     )
 }
 
