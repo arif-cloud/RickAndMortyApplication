@@ -2,6 +2,7 @@ package com.example.rickandmortyapplication.presentation.character_detail
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rickandmortyapplication.data.mappers.toCharacterDetail
@@ -13,11 +14,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CharacterDetailViewModel @Inject constructor(
-    private val repository: RickAndMortyRepository
+    private val repository: RickAndMortyRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _characterDetailState = mutableStateOf(CharacterDetailState())
     val characterDetailState : State<CharacterDetailState> get() = _characterDetailState
+
+    init {
+        savedStateHandle.get<Int>("character_id")?.let {characterId ->
+            fetchData(characterId)
+        }
+    }
 
     private fun fetchData(characterId : Int) {
         viewModelScope.launch {
