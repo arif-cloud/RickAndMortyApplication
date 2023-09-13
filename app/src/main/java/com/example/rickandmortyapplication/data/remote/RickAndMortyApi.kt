@@ -6,10 +6,10 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface RickAndMortyApi {
-    @GET("/character")
+    @GET("character")
     suspend fun getAllCharacters() : CharacterResponse
 
-    @GET("/character/{character_id}")
+    @GET("character/{character_id}")
     suspend fun getCharacter(@Path("character_id") characterId : Int) : CharacterDto
 
 }
