@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.rickandmortyapplication.common.Constants
 import com.example.rickandmortyapplication.data.mappers.toCharacterDetail
 import com.example.rickandmortyapplication.domain.repository.RickAndMortyRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +23,7 @@ class CharacterDetailViewModel @Inject constructor(
     val characterDetailState : State<CharacterDetailState> get() = _characterDetailState
 
     init {
-        savedStateHandle.get<Int>("character_id")?.let {characterId ->
+        savedStateHandle.get<Int>(Constants.PARAM_CHARACTER_ID)?.let {characterId ->
             fetchData(characterId)
         }
     }
