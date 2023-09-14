@@ -96,6 +96,8 @@ dependencies {
     //Paging
     implementation("androidx.paging:paging-runtime-ktx:3.2.1")
     implementation("androidx.paging:paging-compose:3.2.1")
+    //Splash Screen
+    implementation ("androidx.core:core-splashscreen:1.0.0-alpha02")
 }
 kapt {
     correctErrorTypes = true
