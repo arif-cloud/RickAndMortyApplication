@@ -24,12 +24,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.rickandmortyapplication.R
+import com.example.rickandmortyapplication.ui.theme.Green
 import com.example.rickandmortyapplication.ui.theme.Grey
 
 @Composable
@@ -40,28 +43,34 @@ fun CharacterDetailScreen(
     val state = viewModel.characterDetailState.value
     Box(modifier = Modifier.fillMaxSize()) {
         state.data?.let {characterDetail ->
-            Column {
+            val color : Color = if(characterDetail.status == "Alive") Green else if(characterDetail.status == "unknown") Grey else Color.Red
+            Column(modifier = Modifier.padding(horizontal = 10.dp)) {
                 Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+                    .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = { navController.popBackStack() }, content = {
                         Icon(imageVector = Icons.Default.KeyboardArrowLeft, contentDescription = null)
                     })
                     Text(text = characterDetail.name ?: "", modifier = Modifier.weight(1F), textAlign = TextAlign.Center, fontSize = 28.sp)
+                    Icon(painter = painterResource(id = R.drawable.status), contentDescription = null, tint = color)
                 }
-                Box(modifier = Modifier.align(Alignment.CenterHorizontally).padding(vertical = 20.dp)) {
+                Box(modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(vertical = 20.dp)) {
                     Card(shape = RoundedCornerShape(10.dp)) {
                         AsyncImage(model = characterDetail.image, contentDescription = null, modifier = Modifier
                             .width(220.dp)
                             .height(280.dp), contentScale = ContentScale.Crop)
                     }
                 }
+                Text(text = "Species  :  ${characterDetail.species}", fontSize = 20.sp, modifier = Modifier.padding(top = 10.dp))
+                Text(text = "Gender  :  ${characterDetail.gender}", fontSize = 20.sp, modifier = Modifier.padding(top = 10.dp))
+                Text(text = "Location  :  ${characterDetail.location?.name}", fontSize = 20.sp, modifier = Modifier.padding(top = 10.dp))
                 characterDetail.episode?.let {
                     val episodeList = it.map {url -> url?.substring(40) }
-                    Text(text = "Episodes :", modifier = Modifier.padding(start = 10.dp), fontSize = 20.sp)
+                    Text(text = "Episodes :", fontSize = 20.sp, modifier = Modifier.padding(top = 10.dp))
                     LazyRow(modifier = Modifier.fillMaxWidth().padding(top = 10.dp)) {
                         items(episodeList) {episode ->
-                            Card(shape = RoundedCornerShape(5.dp), colors = CardDefaults.cardColors(containerColor = Grey), modifier = Modifier.padding(start = 10.dp)) {
+                            Card(shape = RoundedCornerShape(5.dp), colors = CardDefaults.cardColors(containerColor = color), modifier = Modifier.padding(end = 10.dp)) {
                                 Text(text = episode ?: "", modifier = Modifier.padding(10.dp), color = Color.White)
                             }
                         }
