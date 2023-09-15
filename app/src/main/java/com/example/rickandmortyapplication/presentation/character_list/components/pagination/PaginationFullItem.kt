@@ -1,4 +1,4 @@
-package com.example.rickandmortyapplication.presentation.character_list.components.paging
+package com.example.rickandmortyapplication.presentation.character_list.components.pagination
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
