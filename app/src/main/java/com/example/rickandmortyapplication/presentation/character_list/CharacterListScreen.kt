@@ -2,8 +2,6 @@ package com.example.rickandmortyapplication.presentation.character_list
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -12,12 +10,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.example.rickandmortyapplication.presentation.character_list.components.CharacterListItem
-import com.example.rickandmortyapplication.presentation.character_list.components.paging.PaginationEmptyItem
-import com.example.rickandmortyapplication.presentation.character_list.components.paging.PaginationErrorItem
-import com.example.rickandmortyapplication.presentation.character_list.components.paging.PaginationLoadingItem
-import com.example.rickandmortyapplication.presentation.character_list.components.paging.PaginationFullItem
-import com.example.rickandmortyapplication.presentation.screen.Screen
+import com.example.rickandmortyapplication.presentation.character_list.components.list.CharacterList
+import com.example.rickandmortyapplication.presentation.character_list.components.pagination.PaginationEmptyItem
+import com.example.rickandmortyapplication.presentation.character_list.components.pagination.PaginationErrorItem
 
 @Composable
 fun CharacterListScreen(
@@ -26,40 +21,11 @@ fun CharacterListScreen(
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         val characterList = viewModel.characterList.collectAsLazyPagingItems()
-        LazyColumn(modifier = Modifier.fillMaxWidth()) {
-            items(count = characterList.itemCount) {index ->
-                characterList[index]?.let {character ->
-                    CharacterListItem(character = character, onItemClick = { navController.navigate("${Screen.CharacterDetailScreen.route}/${character.id}") })
-                }
-            }
-            when(characterList.loadState.append) {
-                LoadState.Loading -> {
-                    item {
-                        PaginationLoadingItem()
-                    }
-                }
-                is LoadState.Error -> {
-                    item {
-                        PaginationFullItem()
-                    }
-                }
-                is LoadState.NotLoading -> {}
-            }
-        }
+        CharacterList(characterList = characterList, navController = navController)
         when(characterList.loadState.refresh) {
-            LoadState.Loading -> {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
-            is LoadState.Error -> {
-                PaginationErrorItem {
-                    characterList.refresh()
-                }
-            }
-            is LoadState.NotLoading -> {
-                if (characterList.itemCount < 1) {
-                    PaginationEmptyItem()
-                }
-            }
+            is LoadState.Loading -> { CircularProgressIndicator(modifier = Modifier.align(Alignment.Center)) }
+            is LoadState.Error -> { PaginationErrorItem { characterList.refresh() } }
+            is LoadState.NotLoading -> { if (characterList.itemCount < 1) { PaginationEmptyItem() } }
         }
     }
 }

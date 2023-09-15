@@ -1,8 +1,7 @@
-package com.example.rickandmortyapplication.presentation.character_list.components
+package com.example.rickandmortyapplication.presentation.character_list.components.list
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,13 +20,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.rickandmortyapplication.R
 import com.example.rickandmortyapplication.domain.model.Character
 import com.example.rickandmortyapplication.ui.theme.Green
 import com.example.rickandmortyapplication.ui.theme.Grey
 import com.example.rickandmortyapplication.ui.theme.Orange
-import com.example.rickandmortyapplication.ui.theme.Red
 
 @Composable
 fun CharacterListItem(
@@ -46,7 +45,7 @@ fun CharacterListItem(
         Column(modifier = Modifier
             .padding(start = 10.dp)
             .fillMaxWidth()) {
-            Text(text = character.name ?: "", maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(text = character.name ?: "", maxLines = 1, overflow = TextOverflow.Ellipsis, fontSize = 24.sp)
             Row(modifier = Modifier.padding(top = 10.dp), verticalAlignment = Alignment.CenterVertically) {
                 Icon(painter = painterResource(id = R.drawable.status), contentDescription = null, tint = if(character.status == "Alive") Green else if(character.status == "unknown") Grey else Color.Red)
                 Text(text = character.status ?: "", modifier = Modifier.padding(start = 5.dp))
