@@ -8,7 +8,6 @@ import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.example.rickandmortyapplication.domain.model.Character
-import com.example.rickandmortyapplication.presentation.character_list.components.pagination.PaginationFullItem
 import com.example.rickandmortyapplication.presentation.character_list.components.pagination.PaginationLoadingItem
 import com.example.rickandmortyapplication.presentation.screen.Screen
 
@@ -23,10 +22,10 @@ fun CharacterList(
                 CharacterListItem(character = character, onItemClick = { navController.navigate("${Screen.CharacterDetailScreen.route}/${character.id}") })
             }
         }
-        when(characterList.loadState.append) {
-            is LoadState.Loading -> { item { PaginationLoadingItem() } }
-            is LoadState.Error -> { item { PaginationFullItem() } }
-            is LoadState.NotLoading -> {}
+        if (characterList.loadState.append is LoadState.Loading) {
+            item {
+                PaginationLoadingItem()
+            }
         }
     }
 }

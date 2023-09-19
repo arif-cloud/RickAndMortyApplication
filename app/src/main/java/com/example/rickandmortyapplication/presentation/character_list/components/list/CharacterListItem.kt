@@ -33,10 +33,7 @@ fun CharacterListItem(
     character : Character,
     onItemClick : (Character) -> Unit
 ) {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .padding(start = 10.dp, end = 10.dp, top = 10.dp)
-        .clickable { onItemClick(character) }) {
+    Row(modifier = Modifier.fillMaxWidth().padding(start = 10.dp, end = 10.dp, top = 10.dp).clickable { onItemClick(character) }) {
         Card(shape = RoundedCornerShape(10.dp)) {
             AsyncImage(model = character.image, contentDescription = null, modifier = Modifier
                 .width(120.dp)
