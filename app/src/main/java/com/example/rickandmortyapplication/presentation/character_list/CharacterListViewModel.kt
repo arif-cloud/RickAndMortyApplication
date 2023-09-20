@@ -3,21 +3,51 @@ package com.example.rickandmortyapplication.presentation.character_list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import androidx.paging.map
+import androidx.paging.compose.LazyPagingItems
 import com.example.rickandmortyapplication.data.local.CharacterEntity
-import com.example.rickandmortyapplication.data.mappers.toCharacter
+import com.example.rickandmortyapplication.data.mappers.toCharacterEntity
+import com.example.rickandmortyapplication.data.repository.RoomRepository
+import com.example.rickandmortyapplication.domain.model.Character
+import com.example.rickandmortyapplication.domain.repository.RickAndMortyRepository
+import com.example.rickandmortyapplication.paging.CharactersPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CharacterListViewModel @Inject constructor(
-    pager : Pager<Int, CharacterEntity>
+    private val repository: RickAndMortyRepository,
+    private val characterRepository : RoomRepository
 ) : ViewModel() {
 
-    val characterList = pager.flow.map {pagingData ->
-        pagingData.map { it.toCharacter() }
-    }.cachedIn(scope = viewModelScope)
+    val characterList = Pager(PagingConfig(pageSize = 1)) {
+        CharactersPagingSource(repository)
+    }.flow.cachedIn(scope = viewModelScope)
+
+    fun clearAllData() {
+        viewModelScope.launch {
+            characterRepository.clearAllCharacters()
+        }
+    }
+
+    fun getCharactersData() : List<CharacterEntity> {
+        return characterRepository.getAllCharacters
+    }
+
+    fun saveCharactersData(lazyPagingItems: LazyPagingItems<Character>) {
+        viewModelScope.launch {
+            val characterEntityList = mutableListOf<CharacterEntity>()
+            for (index in 0 until 20) {
+                val character = lazyPagingItems[index]
+                character?.let {
+                    val characterEntity = it.toCharacterEntity()
+                    characterEntityList.add(characterEntity)
+                }
+            }
+            characterRepository.insertAllCharacters(characterEntityList)
+        }
+    }
 
 }

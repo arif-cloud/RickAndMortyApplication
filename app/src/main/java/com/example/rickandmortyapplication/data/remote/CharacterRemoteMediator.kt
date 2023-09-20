@@ -16,7 +16,6 @@ class CharacterRemoteMediator(
     private val api: RickAndMortyApi,
     private val characterDatabase: CharacterDatabase
 ) : RemoteMediator<Int, CharacterEntity>() {
-    private val characterDao = characterDatabase.characterDao
     override suspend fun load(
         loadType: LoadType,
         state: PagingState<Int, CharacterEntity>,
@@ -35,10 +34,10 @@ class CharacterRemoteMediator(
             )
             characterDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    characterDao.clearAllCharacters()
+                    //characterDao.clearAllCharacters()
                 }
                 val characterEntities = characters.results.map { it.toCharacterEntity() }
-                characterDao.insertAllCharacters(characterEntities)
+                //characterDao.insertAllCharacters(characterEntities)
             }
             MediatorResult.Success(
                 endOfPaginationReached = characters.results.isEmpty()

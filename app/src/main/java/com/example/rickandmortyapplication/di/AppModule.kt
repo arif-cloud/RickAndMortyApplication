@@ -1,14 +1,10 @@
 package com.example.rickandmortyapplication.di
 
 import android.content.Context
-import androidx.paging.ExperimentalPagingApi
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.room.Room
 import com.example.rickandmortyapplication.common.Constants
+import com.example.rickandmortyapplication.data.local.CharacterDao
 import com.example.rickandmortyapplication.data.local.CharacterDatabase
-import com.example.rickandmortyapplication.data.local.CharacterEntity
-import com.example.rickandmortyapplication.data.remote.CharacterRemoteMediator
 import com.example.rickandmortyapplication.data.remote.RickAndMortyApi
 import com.example.rickandmortyapplication.data.repository.RickAndMortyRepositoryImpl
 import com.example.rickandmortyapplication.domain.repository.RickAndMortyRepository
@@ -23,7 +19,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-@OptIn(ExperimentalPagingApi::class)
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
@@ -48,23 +43,13 @@ object AppModule {
     @Provides
     @Singleton
     fun provideCharacterDatabase(@ApplicationContext context: Context) : CharacterDatabase {
-        return Room.databaseBuilder(context, CharacterDatabase::class.java, "character.db").build()
+        return Room.databaseBuilder(context, CharacterDatabase::class.java, "character.db").allowMainThreadQueries().build()
     }
 
     @Provides
     @Singleton
-    fun provideCharacterPager(characterDb : CharacterDatabase, api: RickAndMortyApi) : Pager<Int, CharacterEntity> {
-        return Pager(
-            config = PagingConfig(pageSize = 20),
-            remoteMediator = CharacterRemoteMediator(
-                characterDatabase = characterDb,
-                api = api
-            ),
-            pagingSourceFactory = {
-                characterDb.characterDao.getAllCharacters()
-            }
-
-        )
+    fun provideCharacterDao(characterDatabase : CharacterDatabase) : CharacterDao {
+        return characterDatabase.characterDao()
     }
 
 }

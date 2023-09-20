@@ -27,6 +27,17 @@ fun CharacterDto.toCharacterEntity() : CharacterEntity {
     )
 }
 
+fun Character.toCharacterEntity() : CharacterEntity {
+    return CharacterEntity(
+        characterId = id,
+        name = name,
+        image = image,
+        status = status,
+        location = location,
+        gender = gender
+    )
+}
+
 fun CharacterEntity.toCharacter() : Character {
     return Character(
         id = characterId,

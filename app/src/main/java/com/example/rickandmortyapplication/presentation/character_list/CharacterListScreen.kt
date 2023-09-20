@@ -9,7 +9,6 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,16 +31,15 @@ fun CharacterListScreen(
     val context = LocalContext.current
     val refreshing by remember { mutableStateOf(false) }
     val pullRefreshState = rememberPullRefreshState(refreshing = refreshing, onRefresh = { characterList.refresh() })
-    LaunchedEffect(key1 = characterList.loadState) {
-        if (characterList.loadState.refresh is LoadState.Error) {
-            Toast.makeText(context, "Error: " + (characterList.loadState.refresh as LoadState.Error).error.message, Toast.LENGTH_LONG).show()
-        }
+    if (characterList.loadState.refresh is LoadState.Error) {
+        Toast.makeText(context, "No Internet Connection", Toast.LENGTH_LONG).show()
     }
     Box(modifier = Modifier.fillMaxSize().pullRefresh(pullRefreshState)) {
         if (characterList.loadState.refresh is LoadState.Loading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
-        CharacterList(characterList = characterList, navController = navController)
+
+        CharacterList(characterList = characterList, navController = navController, viewModel = viewModel)
         PullRefreshIndicator(refreshing, pullRefreshState, Modifier.align(Alignment.TopCenter))
     }
 }

@@ -8,6 +8,6 @@ import androidx.room.TypeConverters
 @Database(entities = [CharacterEntity::class] , version = 1)
 abstract class CharacterDatabase : RoomDatabase() {
 
-    abstract val characterDao : CharacterDao
+    abstract fun characterDao() : CharacterDao
 
 }
