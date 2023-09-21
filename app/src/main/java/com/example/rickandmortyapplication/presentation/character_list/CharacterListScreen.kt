@@ -1,6 +1,5 @@
 package com.example.rickandmortyapplication.presentation.character_list
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
@@ -14,13 +13,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.rickandmortyapplication.presentation.character_list.components.list.CharacterList
-import com.example.rickandmortyapplication.presentation.character_list.components.list.CharacterListWithDb
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -33,20 +30,13 @@ fun CharacterListScreen(
         viewModel.clearAllData()
         viewModel.saveCharactersData(characterList)
     }
-    val context = LocalContext.current
     val refreshing by remember { mutableStateOf(false) }
     val pullRefreshState = rememberPullRefreshState(refreshing = refreshing, onRefresh = { characterList.refresh() })
-    if (characterList.loadState.refresh is LoadState.Error) {
-        Toast.makeText(context, "No Internet Connection", Toast.LENGTH_LONG).show()
-        val databaseCharacterList = viewModel.getCharactersData()
-        CharacterListWithDb(entityList = databaseCharacterList)
-    } else {
-        Box(modifier = Modifier.fillMaxSize().pullRefresh(pullRefreshState)) {
-            if (characterList.loadState.refresh is LoadState.Loading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
-            CharacterList(characterList = characterList, navController = navController)
-            PullRefreshIndicator(refreshing, pullRefreshState, Modifier.align(Alignment.TopCenter))
+    Box(modifier = Modifier.fillMaxSize().pullRefresh(pullRefreshState)) {
+        if (characterList.loadState.refresh is LoadState.Loading) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
+        CharacterList(characterList = characterList, navController = navController, viewModel = viewModel)
+        PullRefreshIndicator(refreshing, pullRefreshState, Modifier.align(Alignment.TopCenter))
     }
 }
