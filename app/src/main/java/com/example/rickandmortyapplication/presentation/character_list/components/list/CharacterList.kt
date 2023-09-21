@@ -4,6 +4,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.paging.LoadState
@@ -17,16 +20,9 @@ import com.example.rickandmortyapplication.presentation.screen.Screen
 @Composable
 fun CharacterList(
     characterList : LazyPagingItems<Character>,
-    navController : NavController,
-    viewModel: CharacterListViewModel
+    navController : NavController
 ) {
     LazyColumn(modifier = Modifier.fillMaxWidth()) {
-        if (viewModel.getCharactersData().isNotEmpty()) {
-            items(viewModel.getCharactersData()) {
-                val character = it.toCharacter()
-                CharacterListItem(character = character, onItemClick = { navController.navigate("${Screen.CharacterDetailScreen.route}/${character.id}") })
-            }
-        }
         items(count = characterList.itemCount) {index ->
             characterList[index]?.let {character ->
                 CharacterListItem(character = character, onItemClick = { navController.navigate("${Screen.CharacterDetailScreen.route}/${character.id}") })
@@ -36,8 +32,6 @@ fun CharacterList(
             item {
                 PaginationLoadingItem()
             }
-            viewModel.clearAllData()
-            viewModel.saveCharactersData(characterList)
         }
     }
 }

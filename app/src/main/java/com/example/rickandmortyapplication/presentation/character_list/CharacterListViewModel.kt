@@ -39,12 +39,9 @@ class CharacterListViewModel @Inject constructor(
     fun saveCharactersData(lazyPagingItems: LazyPagingItems<Character>) {
         viewModelScope.launch {
             val characterEntityList = mutableListOf<CharacterEntity>()
-            for (index in 0 until 20) {
-                val character = lazyPagingItems[index]
-                character?.let {
-                    val characterEntity = it.toCharacterEntity()
-                    characterEntityList.add(characterEntity)
-                }
+            lazyPagingItems.itemSnapshotList.items.forEach{character ->
+                val characterEntity = character.toCharacterEntity()
+                characterEntityList.add(characterEntity)
             }
             characterRepository.insertAllCharacters(characterEntityList)
         }

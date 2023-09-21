@@ -20,6 +20,7 @@ import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.rickandmortyapplication.presentation.character_list.components.list.CharacterList
+import com.example.rickandmortyapplication.presentation.character_list.components.list.CharacterListWithDb
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -28,18 +29,24 @@ fun CharacterListScreen(
     viewModel: CharacterListViewModel = hiltViewModel()
 ) {
     val characterList = viewModel.characterList.collectAsLazyPagingItems()
+    if (characterList.loadState.refresh is LoadState.NotLoading) {
+        viewModel.clearAllData()
+        viewModel.saveCharactersData(characterList)
+    }
     val context = LocalContext.current
     val refreshing by remember { mutableStateOf(false) }
     val pullRefreshState = rememberPullRefreshState(refreshing = refreshing, onRefresh = { characterList.refresh() })
     if (characterList.loadState.refresh is LoadState.Error) {
         Toast.makeText(context, "No Internet Connection", Toast.LENGTH_LONG).show()
-    }
-    Box(modifier = Modifier.fillMaxSize().pullRefresh(pullRefreshState)) {
-        if (characterList.loadState.refresh is LoadState.Loading) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        val databaseCharacterList = viewModel.getCharactersData()
+        CharacterListWithDb(entityList = databaseCharacterList)
+    } else {
+        Box(modifier = Modifier.fillMaxSize().pullRefresh(pullRefreshState)) {
+            if (characterList.loadState.refresh is LoadState.Loading) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            }
+            CharacterList(characterList = characterList, navController = navController)
+            PullRefreshIndicator(refreshing, pullRefreshState, Modifier.align(Alignment.TopCenter))
         }
-
-        CharacterList(characterList = characterList, navController = navController, viewModel = viewModel)
-        PullRefreshIndicator(refreshing, pullRefreshState, Modifier.align(Alignment.TopCenter))
     }
 }
