@@ -8,9 +8,9 @@ import androidx.paging.cachedIn
 import androidx.paging.compose.LazyPagingItems
 import com.example.rickandmortyapplication.data.local.CharacterEntity
 import com.example.rickandmortyapplication.data.mappers.toCharacterEntity
-import com.example.rickandmortyapplication.data.repository.RoomRepository
 import com.example.rickandmortyapplication.domain.model.Character
 import com.example.rickandmortyapplication.domain.repository.RickAndMortyRepository
+import com.example.rickandmortyapplication.domain.repository.RoomRepository
 import com.example.rickandmortyapplication.paging.CharactersPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -33,7 +33,7 @@ class CharacterListViewModel @Inject constructor(
     }
 
     fun getCharactersData() : List<CharacterEntity> {
-        return characterRepository.getAllCharacters
+        return characterRepository.getAllCharacters()
     }
 
     fun saveCharactersData(lazyPagingItems: LazyPagingItems<Character>) {

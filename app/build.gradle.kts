@@ -120,6 +120,23 @@ dependencies {
     implementation("com.google.firebase:firebase-messaging-ktx:23.2.1")
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
     implementation("com.google.firebase:firebase-analytics-ktx")
+    // TestImplementations
+    implementation ("androidx.test:core:1.5.0")
+    testImplementation ("junit:junit:4.13.2")
+    testImplementation ("org.hamcrest:hamcrest-all:1.3")
+    testImplementation ("androidx.arch.core:core-testing:2.2.0")
+    testImplementation ("org.robolectric:robolectric:4.8.1")
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation ("com.google.truth:truth:1.1.3")
+    testImplementation ("org.mockito:mockito-core:5.3.1")
+    // Android Test Implementations
+    androidTestImplementation ("junit:junit:4.13.2")
+    androidTestImplementation ("org.mockito:mockito-android:4.7.0")
+    androidTestImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    androidTestImplementation ("androidx.arch.core:core-testing:2.2.0")
+    androidTestImplementation ("com.google.truth:truth:1.1.3")
+    androidTestImplementation ("org.mockito:mockito-core:5.3.1")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.44")
 }
 kapt {
     correctErrorTypes = true
