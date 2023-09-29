@@ -7,7 +7,9 @@ import com.example.rickandmortyapplication.data.local.CharacterDao
 import com.example.rickandmortyapplication.data.local.CharacterDatabase
 import com.example.rickandmortyapplication.data.remote.RickAndMortyApi
 import com.example.rickandmortyapplication.data.repository.RickAndMortyRepositoryImpl
+import com.example.rickandmortyapplication.data.repository.RoomRepositoryImpl
 import com.example.rickandmortyapplication.domain.repository.RickAndMortyRepository
+import com.example.rickandmortyapplication.domain.repository.RoomRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -50,6 +52,12 @@ object AppModule {
     @Singleton
     fun provideCharacterDao(characterDatabase : CharacterDatabase) : CharacterDao {
         return characterDatabase.characterDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRoomRepository(dao : CharacterDao) : RoomRepository {
+        return RoomRepositoryImpl(dao)
     }
 
 }
