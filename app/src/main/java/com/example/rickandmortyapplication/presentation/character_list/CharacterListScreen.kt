@@ -13,6 +13,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.LoadState
@@ -32,9 +35,9 @@ fun CharacterListScreen(
     }
     val refreshing by remember { mutableStateOf(false) }
     val pullRefreshState = rememberPullRefreshState(refreshing = refreshing, onRefresh = { characterList.refresh() })
-    Box(modifier = Modifier.fillMaxSize().pullRefresh(pullRefreshState)) {
+    Box(modifier = Modifier.fillMaxSize().pullRefresh(pullRefreshState).semantics { contentDescription = "Character list screen" }) {
         if (characterList.loadState.refresh is LoadState.Loading) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center).testTag("loading"))
         }
         CharacterList(characterList = characterList, navController = navController, viewModel = viewModel)
         PullRefreshIndicator(refreshing, pullRefreshState, Modifier.align(Alignment.TopCenter))
